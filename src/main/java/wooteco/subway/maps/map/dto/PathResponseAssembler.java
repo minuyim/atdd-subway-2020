@@ -33,6 +33,6 @@ public class PathResponseAssembler {
                 .orElse(0);
         int fare = subwayPath.calculateDistanceFare() + extraFare;
 
-        return new PathResponse(stationResponses, subwayPath.calculateDuration(), distance, extraFare + fare);
+        return new PathResponse(stationResponses, subwayPath.calculateDuration(), distance, fare);
     }
 }
