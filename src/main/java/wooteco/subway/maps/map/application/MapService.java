@@ -48,8 +48,12 @@ public class MapService {
         SubwayPath subwayPath = pathService.findPath(lines, source, target, type);
         Map<Long, Station> stations = stationService.findStationsByIds(subwayPath.extractStationId());
         List<Line> pathLines = lineService.findDistinctLinesByIds(subwayPath.extractLineId());
+        int fare = subwayPath.calculateDistanceFare() + pathLines.stream()
+                .mapToInt(Line::getExtraFare)
+                .max()
+                .orElse(0);
 
-        return PathResponseAssembler.assemble(subwayPath, stations, pathLines);
+        return PathResponseAssembler.assemble(subwayPath, stations, fare);
     }
 
     private Map<Long, Station> findStations(List<Line> lines) {
