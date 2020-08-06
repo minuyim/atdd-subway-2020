@@ -31,7 +31,7 @@ public class AuthenticationPrincipalArgumentResolver implements HandlerMethodArg
         return authentication.getPrincipal();
     }
 
-    private Object extractPrincipal(MethodParameter parameter, Authentication authentication) {
+    protected Object extractPrincipal(MethodParameter parameter, Authentication authentication) {
         try {
             Map<String, String> principal = (Map) authentication.getPrincipal();
 
