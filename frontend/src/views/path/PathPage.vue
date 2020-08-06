@@ -192,17 +192,17 @@
 
 <script>
 import validator from '@/utils/validator'
-import { mapActions, mapGetters, mapMutations } from 'vuex'
-import { SHOW_SNACKBAR } from '@/store/shared/mutationTypes'
-import { PATH_TYPE, SNACKBAR_MESSAGES } from '@/utils/constants'
-import { FETCH_STATIONS, SEARCH_PATH } from '@/store/shared/actionTypes'
+import {mapActions, mapGetters, mapMutations} from 'vuex'
+import {SHOW_SNACKBAR} from '@/store/shared/mutationTypes'
+import {PATH_TYPE, SNACKBAR_MESSAGES} from '@/utils/constants'
+import {FETCH_STATIONS, SEARCH_PATH} from '@/store/shared/actionTypes'
 import AddFavoriteButton from '@/views/path/components/AddFavoriteButton'
 import dialog from '@/mixins/dialog'
 import Dialog from '@/components/dialogs/Dialog'
 
 export default {
   name: 'PathPage',
-  components: { Dialog, AddFavoriteButton },
+  components: {Dialog, AddFavoriteButton},
   mixins: [dialog],
   computed: {
     ...mapGetters(['stations', 'pathResult']),
@@ -220,6 +220,7 @@ export default {
     ...mapActions([SEARCH_PATH, FETCH_STATIONS]),
     async onSearchResult() {
       try {
+        await this.searchPath(this.path)
       } catch (e) {
         this.showSnackbar(SNACKBAR_MESSAGES.COMMON.FAIL)
         console.error(e)
