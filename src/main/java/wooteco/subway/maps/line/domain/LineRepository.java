@@ -7,4 +7,6 @@ import java.util.List;
 public interface LineRepository extends JpaRepository<Line, Long> {
     @Override
     List<Line> findAll();
+
+    List<Line> findDistinctByIdIn(List<Long> ids);
 }

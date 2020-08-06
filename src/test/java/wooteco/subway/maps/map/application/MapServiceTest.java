@@ -1,6 +1,13 @@
 package wooteco.subway.maps.map.application;
 
 import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import wooteco.subway.common.TestObjectUtils;
 import wooteco.subway.maps.line.application.LineService;
 import wooteco.subway.maps.line.domain.Line;
 import wooteco.subway.maps.line.domain.LineStation;
@@ -11,12 +18,6 @@ import wooteco.subway.maps.map.dto.MapResponse;
 import wooteco.subway.maps.map.dto.PathResponse;
 import wooteco.subway.maps.station.application.StationService;
 import wooteco.subway.maps.station.domain.Station;
-import wooteco.subway.common.TestObjectUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +88,21 @@ public class MapServiceTest {
         assertThat(pathResponse.getStations()).isNotEmpty();
         assertThat(pathResponse.getDuration()).isNotZero();
         assertThat(pathResponse.getDistance()).isNotZero();
+    }
+
+    @DisplayName("경로를 찾고 경로에 대한 정확한 정보를 보내준다.")
+    @Test
+    void findPathWithInformation() {
+        when(lineService.findLines()).thenReturn(lines);
+        when(pathService.findPath(anyList(), anyLong(), anyLong(), any())).thenReturn(subwayPath);
+        when(stationService.findStationsByIds(anyList())).thenReturn(stations);
+
+        PathResponse pathResponse = mapService.findPath(1L, 3L, PathType.DISTANCE);
+
+        assertThat(pathResponse.getStations()).isNotEmpty();
+        assertThat(pathResponse.getDuration()).isNotZero();
+        assertThat(pathResponse.getDistance()).isNotZero();
+        assertThat(pathResponse.getFare()).isNotZero();
     }
 
     @Test
