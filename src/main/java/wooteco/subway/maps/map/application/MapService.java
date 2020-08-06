@@ -14,9 +14,11 @@ import wooteco.subway.maps.map.dto.PathResponseAssembler;
 import wooteco.subway.maps.station.application.StationService;
 import wooteco.subway.maps.station.domain.Station;
 import wooteco.subway.maps.station.dto.StationResponse;
+import wooteco.subway.members.member.domain.LoginMember;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,17 +45,22 @@ public class MapService {
         return new MapResponse(lineResponses);
     }
 
-    public PathResponse findPath(Long source, Long target, PathType type) {
+    public PathResponse findPath(Long source, Long target, PathType type, LoginMember loginMember) {
         List<Line> lines = lineService.findLines();
         SubwayPath subwayPath = pathService.findPath(lines, source, target, type);
         Map<Long, Station> stations = stationService.findStationsByIds(subwayPath.extractStationId());
         List<Line> pathLines = lineService.findDistinctLinesByIds(subwayPath.extractLineId());
-        int fare = subwayPath.calculateDistanceFare() + pathLines.stream()
+        if (Objects.isNull(loginMember.getId())) {
+            return PathResponseAssembler.assemble(subwayPath, stations, calculatePathFare(subwayPath, pathLines));
+        }
+        return PathResponseAssembler.assemble(subwayPath, stations, loginMember.discountFare(calculatePathFare(subwayPath, pathLines)));
+    }
+
+    private int calculatePathFare(SubwayPath subwayPath, List<Line> pathLines) {
+        return subwayPath.calculateDistanceFare() + pathLines.stream()
                 .mapToInt(Line::getExtraFare)
                 .max()
                 .orElse(0);
-
-        return PathResponseAssembler.assemble(subwayPath, stations, fare);
     }
 
     private Map<Long, Station> findStations(List<Line> lines) {

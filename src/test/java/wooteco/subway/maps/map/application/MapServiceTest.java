@@ -18,6 +18,7 @@ import wooteco.subway.maps.map.dto.MapResponse;
 import wooteco.subway.maps.map.dto.PathResponse;
 import wooteco.subway.maps.station.application.StationService;
 import wooteco.subway.maps.station.domain.Station;
+import wooteco.subway.members.member.domain.LoginMember;
 
 import java.util.HashMap;
 import java.util.List;
@@ -83,7 +84,7 @@ public class MapServiceTest {
         when(pathService.findPath(anyList(), anyLong(), anyLong(), any())).thenReturn(subwayPath);
         when(stationService.findStationsByIds(anyList())).thenReturn(stations);
 
-        PathResponse pathResponse = mapService.findPath(1L, 3L, PathType.DISTANCE);
+        PathResponse pathResponse = mapService.findPath(1L, 3L, PathType.DISTANCE, new LoginMember(null, null, null, null));
 
         assertThat(pathResponse.getStations()).isNotEmpty();
         assertThat(pathResponse.getDuration()).isNotZero();
@@ -97,7 +98,22 @@ public class MapServiceTest {
         when(pathService.findPath(anyList(), anyLong(), anyLong(), any())).thenReturn(subwayPath);
         when(stationService.findStationsByIds(anyList())).thenReturn(stations);
 
-        PathResponse pathResponse = mapService.findPath(1L, 3L, PathType.DISTANCE);
+        PathResponse pathResponse = mapService.findPath(1L, 3L, PathType.DISTANCE, new LoginMember(null, null, null, null));
+
+        assertThat(pathResponse.getStations()).isNotEmpty();
+        assertThat(pathResponse.getDuration()).isNotZero();
+        assertThat(pathResponse.getDistance()).isNotZero();
+        assertThat(pathResponse.getFare()).isNotZero();
+    }
+
+    @DisplayName("경로를 찾고 경로에 대한 로그인 된 사용자의 정보를 이용해 정확한 정보를 보내준다.")
+    @Test
+    void findPathWithInformationWithLogin() {
+        when(lineService.findLines()).thenReturn(lines);
+        when(pathService.findPath(anyList(), anyLong(), anyLong(), any())).thenReturn(subwayPath);
+        when(stationService.findStationsByIds(anyList())).thenReturn(stations);
+
+        PathResponse pathResponse = mapService.findPath(1L, 3L, PathType.DISTANCE, new LoginMember(1L, "a@email.com", "123", 10));
 
         assertThat(pathResponse.getStations()).isNotEmpty();
         assertThat(pathResponse.getDuration()).isNotZero();
