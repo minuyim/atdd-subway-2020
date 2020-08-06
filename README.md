@@ -66,7 +66,7 @@ npm run dev
     - [x] 어린이 (6이상 ~ 13미만)은 350원을 공제한 금액에서 50%를 할인한다.
 
 2. 경로 조회 기능의 문서화
-- [ ] 수정한 조회 기능의 문서화를 한다.
+- [x] 수정한 조회 기능의 문서화를 한다.
 ## 📝 License
 
 This project is [MIT](https://github.com/woowacourse/atdd-subway-2020/blob/master/LICENSE.md) licensed.
