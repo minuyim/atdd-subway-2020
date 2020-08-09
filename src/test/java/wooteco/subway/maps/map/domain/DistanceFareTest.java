@@ -6,9 +6,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DistanceFareTest {
-    @CsvSource(value = {"10,1250", "50,2050", "58,2250"})
+    @CsvSource(value = {"10,1250", "20,1450", "50,2050", "58,2150"})
     @ParameterizedTest
     void calculate(int distance, int expected) {
-        assertThat(DistanceFare.calculate(distance)).isEqualTo(expected);
+        int calculate = DistanceFare.calculate(distance);
+        assertThat(calculate).isEqualTo(expected);
     }
 }

@@ -29,21 +29,16 @@ public enum DistanceFare {
     private static int calculateFarePerUnit(int totalDistance, int deduceDistance, int unitDistance) {
         int calculatedDistance = totalDistance - deduceDistance;
         int unit = calculatedDistance / unitDistance;
-        if (calculatedDistance * -unit * unitDistance > 0) {
-            return unit * UNIT_FARE + 1;
+        if (calculatedDistance - unit * unitDistance > 0) {
+            return (unit + 1) * UNIT_FARE;
         }
         return unit * UNIT_FARE;
     }
 
     private static int calculateFarePerUnit(int totalDistance, int deduceDistance, int maxDistance, int unitDistance) {
-        int calculatedDistance = totalDistance - deduceDistance;
-        if (calculatedDistance > maxDistance) {
-            calculatedDistance = maxDistance;
+        if (totalDistance > maxDistance) {
+            totalDistance = maxDistance;
         }
-        int unit = calculatedDistance / unitDistance;
-        if (calculatedDistance * -unit * unitDistance > 0) {
-            return unit * UNIT_FARE + 1;
-        }
-        return unit * UNIT_FARE;
+        return calculateFarePerUnit(totalDistance, deduceDistance, unitDistance);
     }
 }
